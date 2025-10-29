@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe Trabajo Práctico 2 - Cadena de Gimnasios</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f8fc;
+      color: #333;
+    }
+    .encabezado {
+      display: flex;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #e3f2fd;
+      border-bottom: 2px solid #90caf9;
+    }
+    .encabezado img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    .encabezado h1 {
+      font-size: 1.2em;
+      color: #0d47a1;
+      margin: 0;
+    }
+    .portada {
+      background-color: #0d47a1;
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+    }
+    .portada h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .portada p {
+      font-size: 1.2em;
+      margin: 8px 0;
+    }
+    .contenido {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    h2 {
+      color: #0d47a1;
+      border-bottom: 2px solid #bbdefb;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+    h3 {
+      color: #1565c0;
+      margin-top: 20px;
+    }
+    code, pre {
+      background-color: #e3f2fd;
+      padding: 10px;
+      display: block;
+      border-radius: 5px;
+      overflow-x: auto;
+      width: 794px;
+      max-width: 794px;
+      margin: 0 auto;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    ul {
+      padding-left: 20px;
+      margin: 10px 0 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado con isologo -->
+  <div class="encabezado">
+    <img src="logo.png" alt="Logo Instituto Tecnológico Beltrán">
+    <!--<h1>INSTITUTO TECNOLÓGICO BELTRÁN – Centro de Tecnología e Innovación</h1>-->
+  </div>
+
+  <!-- Portada -->
+  <div class="portada">
+    <h1>TRABAJO PRÁCTICO: Cadena de Gimnasios</h1>
+    <p><strong>Materia:</strong> Minería de Datos</p>
+    <p><strong>Docente:</strong> Fernández, David</p>
+    <p><strong>Alumno:</strong> Oviedo, Lucas Nahuel</p>
+    <p><strong>Carrera:</strong> Tecnicatura en Ciencia de Datos e Inteligencia Artificial</p>
+    <p><strong>Institución:</strong> INSTITUTO SUPERIOR DE FORMACIÓN TÉCNICA N° 197</p>
+    <p><strong>Año:</strong> 2025</p>
+  </div>
+
+  <!-- Contenido -->
+  <div class="contenido">
+    <h2>1. Introducción</h2>
+    <p>Este trabajo práctico se centra en el análisis de datos de una cadena de gimnasios utilizando técnicas de minería de datos. Se realiza un análisis exploratorio de datos (EDA) sobre un conjunto de datos de clientes, incluyendo información sobre género, promociones recibidas, montos promocionales y comportamiento de recompra. El objetivo es desarrollar un modelo predictivo para determinar si un cliente recomprará basado en sus características.</p>
+
+    <h2>2. Descripción del Problema</h2>
+    <p>El problema consiste en analizar datos de clientes de una cadena de gimnasios para predecir el comportamiento de recompra. Los datos incluyen información demográfica y de promociones. Se busca responder preguntas como: ¿Cómo afectan las promociones al comportamiento de recompra?, ¿Qué características son más importantes para predecir la recompra?, ¿Cuál es el rendimiento del modelo predictivo?</p>
+
+    <h3>2.1 Dataset Utilizado</h3>
+    <ul>
+      <li><strong>Mini_Proyecto_Clientes_Promociones.xlsx:</strong> Información de clientes incluyendo ID, género, monto promocional, si recibió promoción y si recompró.</li>
+    </ul>
+
+    <h2>3. Implementación del Análisis</h2>
+    <h3>3.1 Carga de Bibliotecas y Datos</h3>
+    <p>Se cargan las bibliotecas necesarias y el dataset de Excel.</p>
+    <pre><code>import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import openpyxl
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import classification_report, confusion_matrix
+
+df = pd.read_excel("Mini_Proyecto_Clientes_Promociones.xlsx")
+print(df.head())</code></pre>
+
+    <h3>3.2 Preprocesamiento de Datos</h3>
+    <p>Se convierten las variables categóricas a numéricas para el modelado.</p>
+    <pre><code>df['Genero'] = df['Genero'].map({'F':0,'M':1})
+df['Recibio_Promo'] = df['Recibio_Promo'].map({'Si':1, 'No':0})
+df['Recompra'] = df['Recompra'].map({'Si':1, 'No':0})</code></pre>
+
+    <h3>3.3 Análisis Exploratorio</h3>
+    <p>Se crea un gráfico de barras para visualizar el promedio de monto promocional según recompra.</p>
+    <pre><code>plt.figure(figsize=(8, 6))
+sns.barplot(x="Recompra", y="Monto_Promo", data=df, estimator='mean', errorbar=None)
+plt.title("Promedio de Monto Promocional según Recompra")
+plt.xlabel("Recompra (0: No, 1: Si)")
+plt.ylabel("Monto Promocional Promedio")
+plt.show()</code></pre>
+
+    <h3>3.4 Modelado Predictivo</h3>
+    <p>Se divide el dataset en entrenamiento y prueba, y se entrena un árbol de decisión.</p>
+    <pre><code>X = df.drop(['Cliente_ID','Recompra'], axis=1)
+y = df['Recompra']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+modelo = DecisionTreeClassifier(random_state=42)
+modelo.fit(X_train, y_train)</code></pre>
+
+    <h3>3.5 Visualización del Modelo</h3>
+    <p>Se grafica el árbol de decisión entrenado.</p>
+    <pre><code>plt.figure(figsize=(20, 10))
+plot_tree(modelo,
+          feature_names=X.columns,
+          class_names=['No Recompra', 'Si Recompra'],
+          filled=True,
+          rounded=True,
+          fontsize=10)
+plt.title("Árbol de Decisión del Modelo Predictivo")
+plt.show()</code></pre>
+
+    <h3>3.6 Evaluación del Modelo</h3>
+    <p>Se generan predicciones y se evalúa el modelo con matriz de confusión y reporte de clasificación.</p>
+    <pre><code>y_pred = modelo.predict(X_test)
+
+plt.figure(figsize=(8, 6))
+cm = confusion_matrix(y_test, y_pred)
+sns.heatmap(cm,
+            annot=True,
+            fmt='d',
+            cmap='Blues',
+            xticklabels=['No Recompra', 'Si Recompra'],
+            yticklabels=['No Recompra', 'Si Recompra'])
+plt.title('Matriz de Confusión')
+plt.xlabel('Predicción')
+plt.ylabel('Real')
+plt.show()
+
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))</code></pre>
+
+    <h2>4. Resultados y Visualizaciones</h2>
+    <h3>4.1 Promedio de Monto Promocional según Recompra</h3>
+    <p>Gráfico de barras mostrando el promedio de monto promocional para clientes que recompraron y no recompraron.</p>
+    <img src="bar_plot.png" alt="Promedio Monto Promocional según Recompra" style="max-width: 100%; height: auto;">
+
+    <h3>4.2 Árbol de Decisión</h3>
+    <p>Visualización del árbol de decisión utilizado para predecir la recompra de clientes.</p>
+    <img src="decision_tree.png" alt="Árbol de Decisión" style="max-width: 100%; height: auto;">
+
+    <h3>4.3 Matriz de Confusión</h3>
+    <p>Matriz de confusión mostrando el rendimiento del modelo en el conjunto de prueba.</p>
+    <img src="confusion_matrix.png" alt="Matriz de Confusión" style="max-width: 100%; height: auto;">
+
+    <h2>5. Conclusión</h2>
+    <p>Este análisis proporciona insights valiosos sobre el comportamiento de recompra de los clientes de la cadena de gimnasios. El modelo de árbol de decisión desarrollado permite predecir con cierta precisión si un cliente recomprará basado en sus características demográficas y de promociones. Los resultados pueden ser utilizados para optimizar estrategias de marketing y promociones dirigidas a aumentar la retención de clientes.</p>
+  </div>
+
+</body>
+</html>

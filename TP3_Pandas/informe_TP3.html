@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe Trabajo Práctico 3 - Minería de Datos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f8fc;
+      color: #333;
+    }
+    .encabezado {
+      display: flex;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #e3f2fd;
+      border-bottom: 2px solid #90caf9;
+    }
+    .encabezado img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    .encabezado h1 {
+      font-size: 1.2em;
+      color: #0d47a1;
+      margin: 0;
+    }
+    .portada {
+      background-color: #0d47a1;
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+    }
+    .portada h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .portada p {
+      font-size: 1.2em;
+      margin: 8px 0;
+    }
+    .contenido {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    h2 {
+      color: #0d47a1;
+      border-bottom: 2px solid #bbdefb;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+    h3 {
+      color: #1565c0;
+      margin-top: 20px;
+    }
+    code, pre {
+      background-color: #e3f2fd;
+      padding: 10px;
+      display: block;
+      border-radius: 5px;
+      overflow-x: auto;
+      max-width: 100%;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    ul {
+      padding-left: 20px;
+      margin: 10px 0 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado con isologo -->
+  <div class="encabezado">
+    <img src="logo.png" alt="Logo Instituto Tecnológico Beltrán">
+    <!--<h1>INSTITUTO TECNOLÓGICO BELTRÁN – Centro de Tecnología e Innovación</h1>-->
+  </div>
+
+  <!-- Portada -->
+  <div class="portada">
+    <h1>TRABAJO PRÁCTICO 3: Minería de Datos con Pandas</h1>
+    <p><strong>Materia:</strong> Modelizado de Minería de Datos</p>
+    <p><strong>Docente:</strong> Fernández, David</p>
+    <p><strong>Alumno:</strong> Oviedo, Lucas Nahuel</p>
+    <p><strong>Carrera:</strong> Tecnicatura en Ciencia de Datos e Inteligencia Artificial</p>
+    <p><strong>Institución:</strong> INSTITUTO SUPERIOR DE FORMACIÓN TÉCNICA N° 197</p>
+    <p><strong>Año:</strong> 2025</p>
+  </div>
+
+  <!-- Contenido -->
+  <div class="contenido">
+    <h2>1. Introducción</h2>
+    <p>Este trabajo práctico se centra en el análisis de datos de ventas utilizando Python y la biblioteca Pandas. Se realiza un análisis exploratorio de datos (EDA) sobre un conjunto de datos de ventas, incluyendo clientes, productos, facturas y rubros. El objetivo es extraer insights valiosos sobre el comportamiento de ventas, ranking de clientes, productos más vendidos y análisis temporal.</p>
+
+    <h2>2. Descripción del Problema</h2>
+    <p>El problema consiste en analizar datos de ventas de una empresa ficticia. Los datos incluyen información sobre clientes, productos, facturas y ventas. Se busca responder preguntas como: ¿Quiénes son los clientes más importantes?, ¿Cuáles son los productos más vendidos?, ¿Cómo varían las ventas a lo largo del tiempo?, entre otros.</p>
+
+    <h3>2.1 Datasets Utilizados</h3>
+    <ul>
+      <li><strong>clientes.csv:</strong> Información de los clientes (id_cliente, nombre, etc.)</li>
+      <li><strong>productos.csv:</strong> Catálogo de productos (id_producto, descripcion, precio, etc.)</li>
+      <li><strong>rubros.csv:</strong> Clasificación de productos por rubros</li>
+      <li><strong>facturas_encabezados_simulados.csv:</strong> Encabezados de facturas (id_factura, fecha, id_cliente, etc.)</li>
+      <li><strong>facturas_detalles_simulados.csv:</strong> Detalles de facturas (id_factura, id_producto, cantidad, etc.)</li>
+      <li><strong>ventas_simuladas.csv:</strong> Datos de ventas consolidados</li>
+    </ul>
+
+    <h2>3. Implementación del Análisis</h2>
+    <h3>3.1 Carga de Datos</h3>
+    <p>Se cargan los archivos CSV utilizando Pandas y se verifican las columnas de cada dataset.</p>
+    <pre><code>productos = pd.read_csv('productos.csv')
+rubros = pd.read_csv('rubros.csv')
+clientes = pd.read_csv('clientes.csv')
+facturas_encabezados = pd.read_csv('facturas_encabezados_simulados.csv')
+facturas_detalles = pd.read_csv('facturas_detalles_simulados.csv')
+ventas = pd.read_csv('ventas_simuladas.csv')</code></pre>
+
+    <h3>3.2 Unificación de Datos</h3>
+    <p>Se unen los datasets para crear una vista consolidada de ventas con información de clientes.</p>
+    <pre><code>ventas_clientes = pd.merge(ventas, facturas_encabezados, on='id_factura', how='left')
+ventas_clientes = pd.merge(ventas_clientes, clientes, on='id_cliente', how='left')</code></pre>
+
+    <h3>3.3 Análisis de Clientes</h3>
+    <p>Se calcula el ranking de clientes por total de ventas y el ticket promedio por cliente.</p>
+    <pre><code>ranking_clientes = ventas_clientes.groupby('nombre_cliente')['total_venta'].sum().reset_index()
+ranking_clientes = ranking_clientes.sort_values(by='total_venta', ascending=False)
+
+ticket_promedio = ventas_clientes.groupby('nombre_cliente')['total_venta'].mean().reset_index()</code></pre>
+
+    <h3>3.4 Análisis Temporal</h3>
+    <p>Se analiza la evolución de ventas mensuales y semanales (específicamente para septiembre).</p>
+    <pre><code>ventas_clientes['fecha'] = pd.to_datetime(ventas_clientes['fecha'], format='%d/%m/%Y')
+ventas_por_mes = ventas_clientes.groupby(ventas_clientes['fecha'].dt.to_period('M'))['total_venta'].sum().reset_index(name='total_venta')
+
+septiembre_ventas = ventas_clientes[ventas_clientes['fecha'].dt.month == 9]
+ventas_semanales_septiembre = septiembre_ventas.groupby(septiembre_ventas['fecha'].dt.isocalendar().week)['total_venta'].sum().reset_index()</code></pre>
+
+    <h3>3.5 Análisis de Productos</h3>
+    <p>Se identifica el producto más vendido en cantidad y el ranking por facturación total.</p>
+    <pre><code>productos_vendidos = facturas_detalles.groupby('id_producto')['cantidad'].sum().reset_index()
+productos_vendidos = pd.merge(productos_vendidos, productos, on='id_producto')
+
+detalle_con_precio = pd.merge(facturas_detalles, productos, on='id_producto')
+detalle_con_precio['importe'] = detalle_con_precio['cantidad'] * detalle_con_precio['precio']
+ranking_productos = detalle_con_precio.groupby('descripcion')['importe'].sum().reset_index()</code></pre>
+
+    <h3>3.6 Matriz BCG</h3>
+    <p>Se implementa la matriz BCG para clasificar productos según crecimiento e ingresos.</p>
+    <pre><code>detalle = pd.merge(facturas_detalles, productos, on='id_producto')
+detalle = pd.merge(detalle, facturas_encabezados[['id_factura', 'fecha']], left_on='id_facturaENC', right_on='id_factura', how='left')
+detalle['fecha'] = pd.to_datetime(detalle['fecha'], format='%d/%m/%Y')
+detalle['mes'] = detalle['fecha'].dt.to_period('M')
+detalle['importe'] = detalle['cantidad'] * detalle['precio_unitario']
+ingresos_mes = detalle.groupby(['descripcion', 'mes'])['importe'].sum().reset_index()
+pivot = ingresos_mes.pivot(index='descripcion', columns='mes', values='importe').fillna(0)
+pivot['ingresos_totales'] = pivot.sum(axis=1)
+# Cálculo de crecimiento y asignación de cuadrantes...</code></pre>
+
+    <h2>4. Resultados y Visualizaciones</h2>
+    <h3>4.1 Ranking de Clientes</h3>
+    <p>Se presenta un gráfico de barras mostrando el total de ventas por cliente, ordenado de mayor a menor.</p>
+    <img src="ranking_clientes.png" alt="Ranking de Clientes" style="max-width: 100%; height: auto;">
+
+    <h3>4.2 Ventas Mensuales</h3>
+    <p>Gráfico de línea mostrando la evolución mensual de las ventas totales.</p>
+    <img src="ventas_mensuales.png" alt="Ventas Mensuales" style="max-width: 100%; height: auto;">
+
+    <h3>4.3 Ventas Semanales en Septiembre</h3>
+    <p>Análisis detallado de las ventas por semana durante el mes de septiembre.</p>
+    <img src="ventas_semanales_septiembre.png" alt="Ventas Semanales Septiembre" style="max-width: 100%; height: auto;">
+
+    <h3>4.4 Ventas por Rubro</h3>
+    <p>Distribución porcentual de ventas por rubro en formato de gráfico circular.</p>
+    <img src="ventas_por_rubro.png" alt="Ventas por Rubro" style="max-width: 100%; height: auto;">
+
+    <h3>4.5 Ranking de Productos</h3>
+    <p>Gráfico de barras con el ranking de productos por total facturado.</p>
+    <img src="ranking_productos.png" alt="Ranking de Productos" style="max-width: 100%; height: auto;">
+
+    <h3>4.6 Matriz BCG</h3>
+    <p>Diagrama de dispersión clasificando productos en cuatro cuadrantes: Estrellas, Vacas Lecheras, Interrogantes y Perros.</p>
+    <img src="matriz_bcg.png" alt="Matriz BCG" style="max-width: 100%; height: auto;">
+
+    <h2>5. Conclusión</h2>
+    <p>Este análisis proporciona una visión completa del comportamiento de ventas de la empresa. Los insights obtenidos permiten identificar clientes clave, productos estrella y tendencias temporales. La implementación de técnicas de análisis de datos con Pandas demuestra su utilidad para la toma de decisiones empresariales. Los resultados pueden ser utilizados para optimizar estrategias de marketing, gestión de inventario y planificación financiera.</p>
+  </div>
+
+</body>
+</html>

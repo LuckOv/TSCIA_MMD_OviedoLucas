@@ -1,0 +1,83 @@
+[
+    {
+        "type": "header",
+        "version": "5.2.0",
+        "comment": "Export to JSON plugin for PHPMyAdmin"
+    },
+    {
+        "type": "database",
+        "name": "storemineriadedatos"
+    },
+    {
+        "type": "table",
+        "name": "clientes",
+        "database": "storemineriadedatos",
+        "data": [
+            {
+                "id_cliente": "1",
+                "nombre": "Ana Gómez",
+                "id_localidad": "1",
+                "domicilio": "Calle Falsa 123"
+            },
+            {
+                "id_cliente": "2",
+                "nombre": "Luis Martínez",
+                "id_localidad": "2",
+                "domicilio": "Av. Siempreviva 456"
+            },
+            {
+                "id_cliente": "3",
+                "nombre": "María Fernández",
+                "id_localidad": "3",
+                "domicilio": "Mitre 789"
+            },
+            {
+                "id_cliente": "4",
+                "nombre": "Carlos Pérez",
+                "id_localidad": "4",
+                "domicilio": "San Martín 101"
+            },
+            {
+                "id_cliente": "5",
+                "nombre": "Lucía Rodríguez",
+                "id_localidad": "5",
+                "domicilio": "Belgrano 202"
+            },
+            {
+                "id_cliente": "6",
+                "nombre": "Jorge López",
+                "id_localidad": "6",
+                "domicilio": "Rivadavia 303"
+            },
+            {
+                "id_cliente": "7",
+                "nombre": "Sofía Díaz",
+                "id_localidad": "7",
+                "domicilio": "Corrientes 404"
+            },
+            {
+                "id_cliente": "8",
+                "nombre": "Martín Sánchez",
+                "id_localidad": "8",
+                "domicilio": "Lavalle 505"
+            },
+            {
+                "id_cliente": "9",
+                "nombre": "Valentina Torres",
+                "id_localidad": "9",
+                "domicilio": "Urquiza 606"
+            },
+            {
+                "id_cliente": "10",
+                "nombre": "Federico Ramírez",
+                "id_localidad": "10",
+                "domicilio": "Castelli 707"
+            }
+        ]
+    },
+    {
+        "type": "string",
+        "version": "1",
+        "comment": "2"
+    }
+]

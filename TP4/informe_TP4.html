@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe Trabajo Práctico 4 - Gestor de Archivos CSV/JSON</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f8fc;
+      color: #333;
+    }
+    .encabezado {
+      display: flex;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #e3f2fd;
+      border-bottom: 2px solid #90caf9;
+    }
+    .encabezado img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    .encabezado h1 {
+      font-size: 1.2em;
+      color: #0d47a1;
+      margin: 0;
+    }
+    .portada {
+      background-color: #0d47a1;
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+    }
+    .portada h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .portada p {
+      font-size: 1.2em;
+      margin: 8px 0;
+    }
+    .contenido {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    h2 {
+      color: #0d47a1;
+      border-bottom: 2px solid #bbdefb;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+    h3 {
+      color: #1565c0;
+      margin-top: 20px;
+    }
+    code, pre {
+      background-color: #e3f2fd;
+      padding: 10px;
+      display: block;
+      border-radius: 5px;
+      overflow-x: auto;
+      max-width: 100%;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    ul {
+      padding-left: 20px;
+      margin: 10px 0 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado con isologo -->
+  <div class="encabezado">
+    <img src="logo.png" alt="Logo Instituto Tecnológico Beltrán">
+    <!--<h1>INSTITUTO TECNOLÓGICO BELTRÁN – Centro de Tecnología e Innovación</h1>-->
+  </div>
+
+  <!-- Portada -->
+  <div class="portada">
+    <h1>TRABAJO PRÁCTICO 4: Gestor de Archivos CSV/JSON</h1>
+    <p><strong>Materia:</strong> Modelizado de Minería de Datos</p>
+    <p><strong>Docente:</strong> Fernández, David</p>
+    <p><strong>Alumno:</strong> Oviedo, Lucas Nahuel</p>
+    <p><strong>Carrera:</strong> Tecnicatura en Ciencia de Datos e Inteligencia Artificial</p>
+    <p><strong>Institución:</strong> INSTITUTO SUPERIOR DE FORMACIÓN TÉCNICA N° 197</p>
+    <p><strong>Año:</strong> 2025</p>
+  </div>
+
+  <!-- Contenido -->
+  <div class="contenido">
+    <h2>1. Introducción</h2>
+    <p>Este trabajo práctico se centra en el desarrollo de una aplicación web interactiva utilizando Streamlit para la gestión de archivos CSV y JSON. La aplicación permite cargar, visualizar, modificar y guardar datos en estos formatos, proporcionando una interfaz intuitiva para el manejo de datos estructurados. El objetivo es crear una herramienta versátil que facilite la manipulación de datos en entornos de análisis de datos y ciencia de datos.</p>
+
+    <h2>2. Descripción del Problema</h2>
+    <p>El problema consiste en desarrollar una aplicación que permita gestionar archivos de datos en formatos CSV y JSON de manera eficiente. Los usuarios necesitan poder cargar archivos existentes, crear nuevos archivos, visualizar datos en formato tabular, agregar nuevos registros, modificar registros existentes, eliminar registros y guardar los cambios. La aplicación debe ser intuitiva y manejar errores de manera apropiada.</p>
+
+    <h3>2.1 Funcionalidades Requeridas</h3>
+    <ul>
+      <li><strong>Carga de archivos:</strong> Soporte para archivos CSV y JSON, tanto subidos como locales</li>
+      <li><strong>Visualización de datos:</strong> Presentación de datos en formato tabular con métricas</li>
+      <li><strong>Gestión de registros:</strong> Agregar, modificar y eliminar registros</li>
+      <li><strong>Guardado de cambios:</strong> Guardar en archivo actual o crear nuevos archivos</li>
+      <li><strong>Interfaz intuitiva:</strong> Diseño responsive con navegación por pestañas</li>
+    </ul>
+
+    <h2>3. Implementación del Sistema</h2>
+    <h3>3.1 Arquitectura General</h3>
+    <p>La aplicación está construida con Streamlit y utiliza un sistema de estado de sesión para mantener los datos cargados. Se divide en módulos funcionales que manejan diferentes aspectos de la gestión de archivos.</p>
+
+    <h3>3.2 Configuración de la Página</h3>
+    <pre><code>st.set_page_config(
+    page_title="Gestor de Archivos CSV/JSON",
+    page_icon="📊",
+    layout="wide"
+)</code></pre>
+
+    <h3>3.3 Gestión de Estado</h3>
+    <p>Se utiliza el estado de sesión de Streamlit para mantener la información del archivo actual, datos cargados, campos y formato.</p>
+    <pre><code>if 'archivo_actual' not in st.session_state:
+    st.session_state.archivo_actual = None
+if 'datos' not in st.session_state:
+    st.session_state.datos = []
+if 'campos' not in st.session_state:
+    st.session_state.campos = []
+if 'formato_actual' not in st.session_state:
+    st.session_state.formato_actual = None</code></pre>
+
+    <h3>3.4 Funciones de Carga de Archivos</h3>
+    <p>La función <code>cargar_archivo()</code> maneja tanto archivos subidos como archivos locales, determinando el formato automáticamente y cargando los datos usando funciones auxiliares.</p>
+    <pre><code>def cargar_archivo(uploaded_file=None, nombre_archivo=None):
+    try:
+        if uploaded_file is not None:
+            formato = determinar_formato(uploaded_file.name)
+            nombre = uploaded_file.name
+            # Guardar como archivo local y cargar datos
+        elif nombre_archivo:
+            # Verificar existencia y cargar archivo local</code></pre>
+
+    <h3>3.5 Visualización de Datos</h3>
+    <p>La función <code>mostrar_registros()</code> presenta los datos en una tabla interactiva con métricas adicionales.</p>
+    <pre><code>def mostrar_registros():
+    if not st.session_state.datos:
+        st.info("No hay registros para mostrar")
+        return
+
+    df = pd.DataFrame(st.session_state.datos)
+    st.write(f"**Total de registros:** {len(st.session_state.datos)}")
+    st.dataframe(df, use_container_width=True)</code></pre>
+
+    <h3>3.6 Gestión de Registros</h3>
+    <p>Se implementan funciones separadas para agregar, modificar y borrar registros, cada una con su interfaz correspondiente.</p>
+
+    <h4>3.6.1 Agregar Registros</h4>
+    <pre><code>def agregar_registro_interfaz():
+    with st.form("form_agregar_registro"):
+        registro = {}
+        for campo in st.session_state.campos:
+            registro[campo] = st.text_input(f"{campo}")
+        if st.form_submit_button("Agregar Registro"):
+            # Validar y agregar registro</code></pre>
+
+    <h4>3.6.2 Modificar Registros</h4>
+    <pre><code>def modificar_registro_interfaz():
+    opciones = [f"Registro {i+1}" for i in range(len(st.session_state.datos))]
+    registro_seleccionado = st.selectbox("Selecciona el registro:", opciones)
+    # Formulario para modificación</code></pre>
+
+    <h4>3.6.3 Borrar Registros</h4>
+    <pre><code>def borrar_registro_interfaz():
+    df = pd.DataFrame(st.session_state.datos)
+    edited_df = st.data_editor(df, column_config={"Seleccionar": st.column_config.CheckboxColumn()})
+    # Procesar registros seleccionados</code></pre>
+
+    <h3>3.7 Sistema de Guardado</h3>
+    <p>El sistema permite guardar cambios en el archivo actual o crear nuevos archivos en diferentes ubicaciones.</p>
+    <pre><code>def guardar_cambios_interfaz():
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Guardar en archivo actual"):
+            guardar_archivo_actual()
+    with col2:
+        # Interfaz para guardar como nuevo archivo</code></pre>
+
+    <h3>3.8 Interfaz de Usuario</h3>
+    <p>La interfaz principal utiliza un diseño de sidebar para la gestión de archivos y pestañas para las diferentes operaciones.</p>
+    <pre><code>tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    "📋 Ver Registros",
+    "➕ Agregar",
+    "✏️ Modificar",
+    "🗑️ Borrar",
+    "💾 Guardar"
+])</code></pre>
+
+    <h2>4. Resultados y Funcionalidades</h2>
+    <h3>4.1 Pantalla de Bienvenida</h3>
+    <p>La aplicación muestra una pantalla de bienvenida cuando no hay archivo cargado, explicando las funcionalidades disponibles.</p>
+    <img src="pantalla_bienvenida.png" alt="Pantalla de Bienvenida" style="max-width: 100%; height: auto;">
+
+    <h3>4.2 Carga de Archivos</h3>
+    <p>Interfaz en la sidebar que permite subir archivos o seleccionar archivos locales disponibles.</p>
+    <img src="carga_archivos.png" alt="Carga de Archivos" style="max-width: 100%; height: auto;">
+
+    <h3>4.3 Visualización de Datos</h3>
+    <p>Presentación de datos en formato tabular con métricas de resumen.</p>
+    <img src="visualizacion_datos.png" alt="Visualización de Datos" style="max-width: 100%; height: auto;">
+
+    <h3>4.4 Gestión de Registros</h3>
+    <p>Interfaz para agregar nuevos registros con formulario estructurado.</p>
+    <img src="agregar_registro.png" alt="Agregar Registro" style="max-width: 100%; height: auto;">
+
+    <h3>4.5 Modificación de Registros</h3>
+    <p>Selección y modificación de registros existentes.</p>
+    <img src="modificar_registro.png" alt="Modificar Registro" style="max-width: 100%; height: auto;">
+
+    <h3>4.6 Eliminación de Registros</h3>
+    <p>Selección múltiple de registros para eliminación con confirmación.</p>
+    <img src="borrar_registros.png" alt="Borrar Registros" style="max-width: 100%; height: auto;">
+
+    <h3>4.7 Guardado de Cambios</h3>
+    <p>Opciones para guardar en archivo actual o crear nuevos archivos en diferentes ubicaciones.</p>
+    <img src="guardar_cambios.png" alt="Guardar Cambios" style="max-width: 100%; height: auto;">
+
+    <h2>5. Conclusión</h2>
+    <p>La aplicación desarrollada proporciona una solución completa para la gestión de archivos CSV y JSON, ofreciendo una interfaz web intuitiva y funcional. La implementación con Streamlit permite una rápida prototipación y despliegue, mientras que el manejo adecuado del estado de sesión garantiza una experiencia de usuario fluida. Las funcionalidades implementadas cubren todas las necesidades básicas de gestión de datos estructurados, desde la carga inicial hasta el guardado de modificaciones.</p>
+
+    <p>El código está bien estructurado con funciones modulares que facilitan el mantenimiento y la extensión futura. La separación de responsabilidades entre la lógica de negocio y la interfaz de usuario mejora la legibilidad y mantenibilidad del código. Esta herramienta puede ser utilizada en diversos contextos de análisis de datos donde se requiere manipulación interactiva de archivos estructurados.</p>
+  </div>
+
+</body>
+</html>

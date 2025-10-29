@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe Análisis de Código - Gestión CSV/JSON</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f8fc;
+      color: #333;
+    }
+    .encabezado {
+      display: flex;
+      align-items: center;
+      padding: 20px 40px;
+      background-color: #e3f2fd;
+      border-bottom: 2px solid #90caf9;
+    }
+    .encabezado img {
+      height: 60px;
+      margin-right: 20px;
+    }
+    .encabezado h1 {
+      font-size: 1.2em;
+      color: #0d47a1;
+      margin: 0;
+    }
+    .portada {
+      background-color: #0d47a1;
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+    }
+    .portada h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+    .portada p {
+      font-size: 1.2em;
+      margin: 8px 0;
+    }
+    .contenido {
+      padding: 40px;
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    h2 {
+      color: #0d47a1;
+      border-bottom: 2px solid #bbdefb;
+      padding-bottom: 5px;
+      margin-top: 40px;
+    }
+    h3 {
+      color: #1565c0;
+      margin-top: 20px;
+    }
+    code, pre {
+      background-color: #e3f2fd;
+      padding: 10px;
+      display: block;
+      border-radius: 5px;
+      overflow-x: auto;
+      max-width: 100%;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    ul {
+      padding-left: 20px;
+      margin: 10px 0 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado con isologo -->
+  <div class="encabezado">
+    <img src="logo.png" alt="Logo Instituto Tecnológico Beltrán">
+    <!--<h1>INSTITUTO TECNOLÓGICO BELTRÁN – Centro de Tecnología e Innovación</h1>-->
+  </div>
+
+  <!-- Portada -->
+  <div class="portada">
+    <h1>ANÁLISIS DE CÓDIGO: TP 1 Sistema de Gestión CSV/JSON</h1>
+    <p><strong>Materia:</strong> Modelizado de Minería de Datos</p>
+    <p><strong>Docente:</strong> Fernández, David</p>
+    <p><strong>Alumno:</strong> Oviedo, Lucas Nahuel</p>
+    <p><strong>Carrera:</strong> Tecnicatura en Ciencia de Datos e Inteligencia Artificial</p>
+    <p><strong>Institución:</strong> INSTITUTO SUPERIOR DE FORMACIÓN TÉCNICA N° 197</p>
+    <p><strong>Año:</strong> 2025</p>
+  </div>
+
+  <!-- Contenido -->
+  <div class="contenido">
+    <h2>1. Introducción</h2>
+    <p>Este informe presenta un análisis detallado del sistema de gestión de archivos CSV y JSON desarrollado en Python. El sistema permite realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre archivos de datos estructurados, proporcionando una interfaz de línea de comandos interactiva para la manipulación de registros. El análisis se centra en la arquitectura del código, las funciones implementadas y la lógica de negocio del programa.</p>
+
+    <h2>2. Descripción del Problema</h2>
+    <p>El problema abordado consiste en desarrollar un sistema que permita gestionar archivos de datos en formatos CSV y JSON de manera eficiente. Los usuarios necesitan poder cargar múltiples archivos, visualizar registros en formato tabular, agregar nuevos registros, modificar registros existentes y eliminar registros específicos. El sistema debe manejar diferentes tipos de datos y proporcionar una experiencia de usuario intuitiva a través de menús interactivos.</p>
+
+    <h3>2.1 Archivos Analizados</h3>
+    <ul>
+      <li><strong>mainCSV_v4.py:</strong> Archivo principal que contiene la lógica del menú interactivo y la coordinación de operaciones</li>
+      <li><strong>funcionesCSV_v3.py:</strong> Módulo de funciones que implementa las operaciones CRUD para archivos CSV y JSON</li>
+    </ul>
+
+    <h2>3. Implementación del Sistema</h2>
+    <h3>3.1 Estructura General</h3>
+    <p>El sistema está dividido en dos archivos principales: un módulo de funciones (`funcionesCSV_v3.py`) que contiene las operaciones de bajo nivel, y un archivo principal (`mainCSV_v4.py`) que maneja la interfaz de usuario y la lógica de aplicación.</p>
+
+    <h3>3.2 Funciones del Módulo funcionesCSV_v3.py</h3>
+    <p>Este módulo contiene las funciones básicas para manipular archivos CSV y JSON:</p>
+    <pre><code># Funciones para CSV
+def csv_a_diccionarios(archivo):
+    """Lee un archivo CSV y retorna una lista de diccionarios"""
+
+def agregar_registro(archivo, nuevo_registro):
+    """Agrega un nuevo registro al archivo CSV"""
+
+def borrar_por_indice(archivo, indices):
+    """Borra registros por sus índices"""
+
+def modificar_interactivo(archivo):
+    """Función interactiva para modificar registros"""
+
+# Funciones para JSON
+def json_a_diccionarios(archivo):
+    """Lee un archivo JSON y retorna una lista de diccionarios"""
+
+def agregar_registro_json(archivo, nuevo_registro):
+    """Agrega un nuevo registro al archivo JSON"""
+
+def borrar_por_indice_json(archivo, indices):
+    """Borra registros por sus índices en JSON"""
+
+def modificar_interactivo_json(archivo):
+    """Función interactiva para modificar registros en JSON"""</code></pre>
+
+    <h3>3.3 Lógica del Programa Principal</h3>
+    <p>El archivo principal implementa un menú interactivo con seis opciones principales:</p>
+    <pre><code>def main():
+    archivos_cargados = {}
+
+    while True:
+        mostrar_menu(archivos_cargados)
+
+        opcion = input("\nSeleccione una opción (1-6): ").strip()
+
+        match opcion:
+            case "1":  # Cargar archivos
+                nuevos_archivos = cargar_archivos()
+                archivos_cargados.update(nuevos_archivos)
+
+            case "2":  # Leer y mostrar registros
+                # Implementación de lectura y visualización
+
+            case "3":  # Agregar nuevo registro
+                # Implementación de inserción
+
+            case "4":  # Borrar registro
+                # Implementación de eliminación
+
+            case "5":  # Modificar registro
+                # Implementación de modificación
+
+            case "6":  # Salir
+                break</code></pre>
+
+    <h3>3.4 Gestión de Archivos y Formatos</h3>
+    <p>El sistema determina automáticamente el formato de archivo basado en la extensión:</p>
+    <pre><code>def determinar_formato(archivo):
+    if archivo.lower().endswith('.json'):
+        return 'json'
+    elif archivo.lower().endswith('.csv'):
+        return 'csv'
+    else:
+        return None</code></pre>
+
+    <h3>3.5 Interfaz de Usuario</h3>
+    <p>La función `mostrar_registros_como_tabla` crea una representación visual atractiva de los datos:</p>
+    <pre><code>def mostrar_registros_como_tabla(registros, archivo):
+    # Calcular anchos de columna
+    anchos = {}
+    for col in columnas:
+        anchos[col] = max(len(col), max(len(str(registro.get(col, ''))) for registro in registros))
+
+    # Imprimir tabla con bordes
+    imprimir_linea()
+    print("|" + "|".join(f" {col:<{anchos[col]}} " for col in columnas) + "|")
+    imprimir_linea()
+
+    for registro in registros:
+        fila = "|" + "|".join(f" {str(registro.get(col, '')):<{anchos[col]}} " for col in columnas) + "|"
+        print(fila)</code></pre>
+
+    <h3>3.6 Gestión de IDs y Localidades</h3>
+    <p>El sistema incluye lógica especial para campos de ID y selección de localidades:</p>
+    <pre><code>def pedir_datos_registro(campos, archivo_actual, localidades_data=None):
+    for campo in campos:
+        if campo.lower().startswith('id_') and campo != 'id_localidad':
+            registros_existentes = csv_a_diccionarios(archivo_actual) if os.path.exists(archivo_actual) else []
+            nuevo_id = len(registros_existentes) + 1
+            registro[campo] = str(nuevo_id)
+        elif campo == 'id_localidad' and localidades_data:
+            registro[campo] = seleccionar_localidad(localidades_data)</code></pre>
+
+    <h2>4. Funcionalidades y Características</h2>
+    <h3>4.1 Carga de Archivos</h3>
+    <p>Permite cargar múltiples archivos CSV/JSON simultáneamente, con validación de existencia y creación automática si no existen.</p>
+
+    <h3>4.2 Visualización de Datos</h3>
+    <p>Muestra los registros en formato tabular con bordes y alineación automática de columnas.</p>
+
+    <h3>4.3 Operaciones CRUD</h3>
+    <ul>
+      <li><strong>Crear:</strong> Agregar nuevos registros con validación de campos</li>
+      <li><strong>Leer:</strong> Visualizar todos los registros de un archivo</li>
+      <li><strong>Actualizar:</strong> Modificar registros existentes de forma interactiva</li>
+      <li><strong>Eliminar:</strong> Borrar registros por índice con confirmación</li>
+    </ul>
+
+    <h3>4.4 Opciones de Guardado</h3>
+    <p>Para operaciones de modificación y eliminación, el sistema ofrece dos opciones:</p>
+    <ul>
+      <li>Sobrescribir el archivo original</li>
+      <li>Crear un nuevo archivo con los cambios</li>
+    </ul>
+
+    <h3>4.5 Manejo de Errores</h3>
+    <p>Incluye manejo robusto de excepciones y validación de entradas del usuario.</p>
+
+    <h2>5. Conclusión</h2>
+    <p>El sistema de gestión CSV/JSON analizado demuestra una implementación sólida de operaciones CRUD con una arquitectura modular bien estructurada. La separación entre la lógica de negocio (funcionesCSV_v3.py) y la interfaz de usuario (mainCSV_v4.py) facilita el mantenimiento y la extensibilidad del código. Las características implementadas como la visualización tabular, el manejo automático de IDs y las opciones flexibles de guardado hacen del sistema una herramienta práctica para la manipulación de datos estructurados. El código sigue buenas prácticas de programación con manejo adecuado de errores y una interfaz intuitiva para el usuario final.</p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+id_producto,descripcion,precio,id_proveedor,id_rubro,stock
+1,Notebook Dell Inspiron i7,520000,1,1,10
+2,PC Gamer Ryzen 5,650000,2,1,5
+3,Impresora Epson EcoTank,98000,3,1,8
+4,Mouse Logitech G203,9500,2,2,25
+5,Teclado Corsair K55 RGB,18000,3,2,15
+6,Webcam Nexxt Full HD,22000,1,2,12
+7,Auriculares Sony WH-CH520,27000,2,3,20
+8,Parlantes Logitech Z313,32000,3,3,10
+9,Micrófono condensador USB,45000,1,3,7
+10,Cámara Canon EOS Rebel T7,380000,4,4,4
+11,Proyector Epson PowerLite,250000,2,4,6
+12,"Monitor LG UltraWide 29""",210000,1,4,9
